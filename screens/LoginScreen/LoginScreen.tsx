@@ -59,6 +59,7 @@ const LoginScreen: FC = () => {
             Iniciar sesión
           </Text>
           <TextInput
+            disabled={loading}
             error={error === 'empty-email'}
             label="Correo electrónico"
             mode="outlined"
@@ -67,6 +68,7 @@ const LoginScreen: FC = () => {
             value={data.email}
           />
           <TextInput
+            disabled={loading}
             error={error === 'empty-password'}
             label="Contraseña"
             mode="outlined"
@@ -76,6 +78,7 @@ const LoginScreen: FC = () => {
             value={data.password}
           />
           <Button
+            disabled={loading}
             onPress={login}
             mode="contained-tonal"
             icon={
