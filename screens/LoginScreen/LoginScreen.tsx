@@ -1,16 +1,49 @@
 import Icon from 'react-native-vector-icons/MaterialIcons';
-import { FC, useState } from 'react';
+import { FC, useCallback, useState } from 'react';
 import { View, StyleSheet } from 'react-native';
-import { Text, Card, TextInput, Button } from 'react-native-paper';
+import { Text, Card, TextInput, Button, useTheme } from 'react-native-paper';
 
-import { colors } from '../../theme';
+import api from '../../api';
+import { AxiosError } from 'axios';
 
 const LoginScreen: FC = () => {
+  const theme = useTheme();
+
+  const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const [data, setData] = useState({
     email: '',
     password: '',
   });
+
+  const login = useCallback(() => {
+    if (!data.email) {
+      setError('empty-email');
+      return;
+    } else if (!data.password) {
+      setError('empty-password');
+      return;
+    }
+
+    setLoading(true);
+
+    api
+      .post('/auth/login', {
+        email: data.email.trim(),
+        password: data.password.trim(),
+      })
+      .then(console.log)
+      .catch(error => {
+        const axiosError = error as AxiosError;
+
+        if (!axiosError.response) {
+          setError('connection-error');
+        } else if (axiosError.response.status === 401) {
+          setError('wrong-data');
+        }
+      })
+      .finally(() => setLoading(false));
+  }, [data]);
 
   return (
     <View style={styles.container}>
@@ -20,6 +53,7 @@ const LoginScreen: FC = () => {
             Iniciar sesión
           </Text>
           <TextInput
+            error={error === 'empty-email'}
             label="Correo electrónico"
             mode="outlined"
             onChangeText={text => setData({ ...data, email: text })}
@@ -27,6 +61,7 @@ const LoginScreen: FC = () => {
             value={data.email}
           />
           <TextInput
+            error={error === 'empty-password'}
             label="Contraseña"
             mode="outlined"
             onChangeText={text => setData({ ...data, password: text })}
@@ -35,6 +70,7 @@ const LoginScreen: FC = () => {
             value={data.password}
           />
           <Button
+            onPress={login}
             mode="contained"
             icon={
               loading
@@ -42,13 +78,33 @@ const LoginScreen: FC = () => {
                     <Icon
                       name="hourglass-empty"
                       size={20}
-                      color={colors.white}
+                      color={theme.colors.surface}
                     />
                   )
                 : undefined
             }>
             {loading ? 'Entrando...' : 'Entrar'}
           </Button>
+          {error.includes('empty') ? (
+            <Text style={[styles.errorText, { color: theme.colors.error }]}>
+              Existen campos vacíos
+            </Text>
+          ) : null}
+          {error.includes('server') ? (
+            <Text style={[styles.errorText, { color: theme.colors.error }]}>
+              Hubo un error en el servidor
+            </Text>
+          ) : null}
+          {error.includes('connection') ? (
+            <Text style={[styles.errorText, { color: theme.colors.error }]}>
+              Error de conexión con el servidor
+            </Text>
+          ) : null}
+          {error.includes('wrong') ? (
+            <Text style={[styles.errorText, { color: theme.colors.error }]}>
+              Las credenciales no son válidas
+            </Text>
+          ) : null}
         </Card.Content>
       </Card>
     </View>
@@ -72,6 +128,10 @@ const styles = StyleSheet.create({
   },
   field: {
     marginBottom: 12,
+  },
+  errorText: {
+    marginTop: 10,
+    textAlign: 'right',
   },
 });
 
