@@ -37,7 +37,7 @@ const LoginScreen: FC = () => {
         password: data.password.trim(),
       })
       .then(() => {
-        navigation.navigate('DrawerNavigator');
+        navigation.replace('DrawerNavigator');
       })
       .catch(error => {
         const axiosError = error as AxiosError;

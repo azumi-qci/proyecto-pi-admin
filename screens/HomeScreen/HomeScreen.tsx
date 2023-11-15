@@ -1,13 +1,26 @@
 import Icon from 'react-native-vector-icons/MaterialIcons';
-import { FC } from 'react';
-import { Dimensions, StyleSheet, View } from 'react-native';
+import { FC, useCallback } from 'react';
+import { Dimensions, Image, StyleSheet, View } from 'react-native';
 import { Button, useTheme } from 'react-native-paper';
+import { useNavigation } from '@react-navigation/native';
+
+import { DrawerNavigatorNavigationProp } from '../../types/Navigation.types';
+
+import cuceiLogoImg from '../../images/cucei-logo.png';
 
 const HomeScreen: FC = () => {
   const theme = useTheme();
+  const navigation = useNavigation<DrawerNavigatorNavigationProp>();
+
+  const onPressLogout = useCallback(() => {
+    navigation.replace('Login');
+  }, []);
 
   return (
     <View style={styles.container}>
+      <View style={styles.logoContainer}>
+        <Image style={styles.logoImg} source={cuceiLogoImg} />
+      </View>
       <Button
         style={styles.button}
         mode="contained-tonal"
@@ -37,7 +50,8 @@ const HomeScreen: FC = () => {
           <Icon name="logout" size={24} color={theme.colors.surface} />
         )}
         labelStyle={[styles.buttonLabel, { color: theme.colors.surface }]}
-        buttonColor={theme.colors.error}>
+        buttonColor={theme.colors.error}
+        onPress={onPressLogout}>
         Salir
       </Button>
     </View>
@@ -49,6 +63,15 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 15,
     width: Dimensions.get('window').width,
+  },
+  logoContainer: {
+    alignItems: 'center',
+  },
+  logoImg: {
+    height: 150,
+    resizeMode: 'contain',
+    width: Dimensions.get('window').width,
+    marginBottom: 30,
   },
   button: {
     marginBottom: 10,

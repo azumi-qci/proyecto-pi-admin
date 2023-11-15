@@ -9,3 +9,8 @@ export type LoginNavigationProp = NativeStackNavigationProp<
   RootStackParamList,
   'Login'
 >;
+
+export type DrawerNavigatorNavigationProp = NativeStackNavigationProp<
+  RootStackParamList,
+  'DrawerNavigator'
+>;

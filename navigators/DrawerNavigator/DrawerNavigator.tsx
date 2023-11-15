@@ -26,7 +26,7 @@ const DrawerNavigator: FC = () => {
       <Drawer.Screen
         name="Home"
         component={HomeScreen}
-        options={{ headerTitle: 'Administración', title: 'Inicio' }}
+        options={{ headerTitle: 'Administración de accesos', title: 'Inicio' }}
       />
     </Drawer.Navigator>
   );
