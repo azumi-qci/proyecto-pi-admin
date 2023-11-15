@@ -25,21 +25,27 @@ const HomeScreen: FC = () => {
         style={styles.button}
         mode="contained-tonal"
         labelStyle={styles.buttonLabel}
-        icon={() => <Icon name="key" size={24} />}>
+        icon={() => (
+          <Icon name="key" size={24} color={theme.colors.tertiary} />
+        )}>
         Registro de accesos
       </Button>
       <Button
         style={styles.button}
         mode="contained-tonal"
         labelStyle={styles.buttonLabel}
-        icon={() => <Icon name="person" size={24} />}>
+        icon={() => (
+          <Icon name="person" size={24} color={theme.colors.tertiary} />
+        )}>
         Registro de usuarios
       </Button>
       <Button
         style={styles.button}
         mode="contained-tonal"
         labelStyle={styles.buttonLabel}
-        icon={() => <Icon name="door-front" size={24} />}>
+        icon={() => (
+          <Icon name="door-front" size={24} color={theme.colors.tertiary} />
+        )}>
         Registro de puertas
       </Button>
 

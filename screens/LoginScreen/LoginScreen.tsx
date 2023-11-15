@@ -77,14 +77,14 @@ const LoginScreen: FC = () => {
           />
           <Button
             onPress={login}
-            mode="contained"
+            mode="contained-tonal"
             icon={
               loading
                 ? () => (
                     <Icon
                       name="hourglass-empty"
                       size={20}
-                      color={theme.colors.surface}
+                      color={theme.colors.tertiary}
                     />
                   )
                 : undefined
