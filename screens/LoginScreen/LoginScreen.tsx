@@ -2,12 +2,16 @@ import Icon from 'react-native-vector-icons/MaterialIcons';
 import { FC, useCallback, useState } from 'react';
 import { View, StyleSheet } from 'react-native';
 import { Text, Card, TextInput, Button, useTheme } from 'react-native-paper';
+import { useNavigation } from '@react-navigation/native';
+import { AxiosError } from 'axios';
+
+import { LoginNavigationProp } from '../../types/Navigation.types';
 
 import api from '../../api';
-import { AxiosError } from 'axios';
 
 const LoginScreen: FC = () => {
   const theme = useTheme();
+  const navigation = useNavigation<LoginNavigationProp>();
 
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
@@ -32,7 +36,9 @@ const LoginScreen: FC = () => {
         email: data.email.trim(),
         password: data.password.trim(),
       })
-      .then(console.log)
+      .then(() => {
+        navigation.navigate('DrawerNavigator');
+      })
       .catch(error => {
         const axiosError = error as AxiosError;
 
