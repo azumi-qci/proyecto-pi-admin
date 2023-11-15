@@ -6,8 +6,6 @@ import { useNavigation } from '@react-navigation/native';
 
 import { DrawerNavigatorNavigationProp } from '../../types/Navigation.types';
 
-import cuceiLogoImg from '../../images/cucei-logo.png';
-
 const HomeScreen: FC = () => {
   const theme = useTheme();
   const navigation = useNavigation<DrawerNavigatorNavigationProp>();
@@ -19,7 +17,10 @@ const HomeScreen: FC = () => {
   return (
     <View style={styles.container}>
       <View style={styles.logoContainer}>
-        <Image style={styles.logoImg} source={cuceiLogoImg} />
+        <Image
+          style={styles.logoImg}
+          source={require('../../images/cucei-logo.png')}
+        />
       </View>
       <Button
         style={styles.button}
