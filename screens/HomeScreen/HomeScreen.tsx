@@ -10,9 +10,13 @@ const HomeScreen: FC = () => {
   const theme = useTheme();
   const navigation = useNavigation<DrawerNavigatorNavigationProp>();
 
-  const onPressLogout = useCallback(() => {
+  const onPressDoorManagement = () => {
+    navigation.jumpTo('DoorManagement');
+  };
+
+  const onPressLogout = () => {
     navigation.replace('Login');
-  }, []);
+  };
 
   return (
     <View style={styles.container}>
@@ -46,7 +50,8 @@ const HomeScreen: FC = () => {
         labelStyle={styles.buttonLabel}
         icon={() => (
           <Icon name="door-front" size={24} color={theme.colors.tertiary} />
-        )}>
+        )}
+        onPress={onPressDoorManagement}>
         Registro de puertas
       </Button>
 
