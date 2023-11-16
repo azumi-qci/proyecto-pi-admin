@@ -9,7 +9,8 @@ export type RootStackParamList = {
 
 export type DrawerParamList = {
   DrawerNavigator: undefined;
-  DoorManagement: undefined;
+  UserManagement: undefined;
+  AccessManagement: undefined;
 };
 
 export type LoginNavigationProp = NativeStackNavigationProp<

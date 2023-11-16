@@ -9,7 +9,8 @@ import { Text, useTheme } from 'react-native-paper';
 import { StyleSheet, View } from 'react-native';
 
 import { HomeScreen } from '../../screens/HomeScreen';
-import { DoorManagementScreen } from '../../screens/DoorManagmentScreen';
+import { UserManagementScreen } from '../../screens/UserManagementScreen';
+import { AccessManagementScreen } from '../../screens/AccessManagementScreen';
 
 const Drawer = createDrawerNavigator();
 
@@ -30,11 +31,19 @@ const DrawerNavigator: FC = () => {
         options={{ headerTitle: 'Administración de accesos', title: 'Inicio' }}
       />
       <Drawer.Screen
-        name="DoorManagement"
-        component={DoorManagementScreen}
+        name="AccessManagement"
+        component={UserManagementScreen}
         options={{
-          headerTitle: 'Administrar puertas',
-          title: 'Registro de puertas',
+          headerTitle: 'Administrar acceso',
+          title: 'Registro de accesos',
+        }}
+      />
+      <Drawer.Screen
+        name="UserManagement"
+        component={UserManagementScreen}
+        options={{
+          headerTitle: 'Administrar usuarios',
+          title: 'Registro de usuarios',
         }}
       />
     </Drawer.Navigator>

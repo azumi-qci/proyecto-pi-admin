@@ -10,8 +10,12 @@ const HomeScreen: FC = () => {
   const theme = useTheme();
   const navigation = useNavigation<DrawerNavigatorNavigationProp>();
 
-  const onPressDoorManagement = () => {
-    navigation.jumpTo('DoorManagement');
+  const onPressAccessManagement = () => {
+    navigation.jumpTo('AccessManagement');
+  };
+
+  const onPressUserManagement = () => {
+    navigation.jumpTo('UserManagement');
   };
 
   const onPressLogout = () => {
@@ -28,6 +32,7 @@ const HomeScreen: FC = () => {
       </View>
       <Button
         style={styles.button}
+        onPress={onPressAccessManagement}
         mode="contained-tonal"
         labelStyle={styles.buttonLabel}
         icon={() => (
@@ -37,6 +42,7 @@ const HomeScreen: FC = () => {
       </Button>
       <Button
         style={styles.button}
+        onPress={onPressUserManagement}
         mode="contained-tonal"
         labelStyle={styles.buttonLabel}
         icon={() => (
@@ -44,17 +50,6 @@ const HomeScreen: FC = () => {
         )}>
         Registro de usuarios
       </Button>
-      <Button
-        style={styles.button}
-        mode="contained-tonal"
-        labelStyle={styles.buttonLabel}
-        icon={() => (
-          <Icon name="door-front" size={24} color={theme.colors.tertiary} />
-        )}
-        onPress={onPressDoorManagement}>
-        Registro de puertas
-      </Button>
-
       <Button
         style={[styles.button, styles.logoutButton]}
         mode="contained-tonal"

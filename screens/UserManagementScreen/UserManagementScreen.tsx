@@ -2,12 +2,12 @@ import { FC } from 'react';
 import { View } from 'react-native';
 import { Text } from 'react-native-paper';
 
-const DoorManagementScren: FC = () => {
+const UserManagementScreen: FC = () => {
   return (
     <View>
-      <Text>XD</Text>
+      <Text>Usuarios</Text>
     </View>
   );
 };
 
-export default DoorManagementScren;
+export default UserManagementScreen;
