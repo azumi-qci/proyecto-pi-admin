@@ -36,7 +36,7 @@ const MainStackNavigator: FC = () => {
           title: 'Registros de puerta',
           headerRight: () => (
             <Pressable onPress={() => onPressNewLog()}>
-              <Icon name="add" size={20} color={theme.colors.tertiary} />
+              <Icon name="add" size={26} color={theme.colors.tertiary} />
             </Pressable>
           ),
         }}
