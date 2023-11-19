@@ -14,17 +14,13 @@ import { AccessManagementScreen } from '../../screens/AccessManagementScreen';
 
 const Drawer = createDrawerNavigator();
 
-interface CustomDrawerProps extends DrawerContentComponentProps {
-  email: string;
-}
+interface CustomDrawerProps extends DrawerContentComponentProps {}
 
 const DrawerNavigator: FC = () => {
   return (
     <Drawer.Navigator
       initialRouteName="Home"
-      drawerContent={props => (
-        <CustomDrawer email="alejandro-hdez115@outlook.com" {...props} />
-      )}>
+      drawerContent={props => <CustomDrawer {...props} />}>
       <Drawer.Screen
         name="Home"
         component={HomeScreen}
@@ -32,7 +28,7 @@ const DrawerNavigator: FC = () => {
       />
       <Drawer.Screen
         name="AccessManagement"
-        component={UserManagementScreen}
+        component={AccessManagementScreen}
         options={{
           headerTitle: 'Administrar acceso',
           title: 'Registro de accesos',
@@ -50,7 +46,7 @@ const DrawerNavigator: FC = () => {
   );
 };
 
-const CustomDrawer: FC<CustomDrawerProps> = ({ email, ...props }) => {
+const CustomDrawer: FC<CustomDrawerProps> = ({ ...props }) => {
   const theme = useTheme();
 
   return (
@@ -61,7 +57,7 @@ const CustomDrawer: FC<CustomDrawerProps> = ({ email, ...props }) => {
           { borderBottomColor: theme.colors.shadow },
         ]}>
         <Text style={styles.headerTextBold}>Correo electrónico</Text>
-        <Text>{email}</Text>
+        <Text>...</Text>
       </View>
       <DrawerItemList {...props} />
     </DrawerContentScrollView>

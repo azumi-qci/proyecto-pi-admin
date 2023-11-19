@@ -1,11 +1,12 @@
 import Icon from 'react-native-vector-icons/MaterialIcons';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { FC, useCallback, useState } from 'react';
 import { View, StyleSheet } from 'react-native';
 import { Text, Card, TextInput, Button, useTheme } from 'react-native-paper';
 import { useNavigation } from '@react-navigation/native';
 import { AxiosError } from 'axios';
 
-import { LoginNavigationProp } from '../../types/Navigation.types';
+import { LoginNavigationProp } from '../../types/navigation.types';
 
 import api from '../../api';
 
@@ -32,12 +33,22 @@ const LoginScreen: FC = () => {
     setLoading(true);
 
     api
-      .post('/auth/login', {
-        email: data.email.trim(),
-        password: data.password.trim(),
-      })
-      .then(() => {
-        navigation.replace('DrawerNavigator');
+      .post<{ error: boolean; content: { email: string; token: string } }>(
+        '/auth/login',
+        {
+          email: data.email.trim(),
+          password: data.password.trim(),
+        },
+      )
+      .then(async response => {
+        try {
+          await AsyncStorage.setItem('email', response.data.content.email);
+          await AsyncStorage.setItem('token', response.data.content.token);
+
+          navigation.replace('DrawerNavigator');
+        } catch (error) {
+          console.log(error);
+        }
       })
       .catch(error => {
         const axiosError = error as AxiosError;

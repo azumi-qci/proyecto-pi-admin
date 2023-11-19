@@ -4,7 +4,7 @@ import { Dimensions, Image, StyleSheet, View } from 'react-native';
 import { Button, useTheme } from 'react-native-paper';
 import { useNavigation } from '@react-navigation/native';
 
-import { DrawerNavigatorNavigationProp } from '../../types/Navigation.types';
+import { DrawerNavigatorNavigationProp } from '../../types/navigation.types';
 
 const HomeScreen: FC = () => {
   const theme = useTheme();
