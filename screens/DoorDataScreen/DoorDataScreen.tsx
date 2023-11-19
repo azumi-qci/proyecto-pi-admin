@@ -22,6 +22,9 @@ const DoorDataScreen: FC = () => {
         headers: {
           Authorization: `Bearer ${token}`,
         },
+        params: {
+          show_all: true,
+        },
       })
       .then(respose => {
         setLogs(respose.data.content);
