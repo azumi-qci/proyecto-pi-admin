@@ -73,7 +73,7 @@ const DoorDataScreen: FC = () => {
       .then(() => {
         const itemIndex = logs?.findIndex(item => item.id === logToDelete);
 
-        if (logs && itemIndex && itemIndex > -1) {
+        if (logs && itemIndex !== undefined && itemIndex > -1) {
           const tempList = [...logs];
 
           tempList.splice(itemIndex, 1);
