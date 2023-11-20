@@ -10,13 +10,13 @@ import {
   Button,
 } from 'react-native-paper';
 
-import { DoorDataScreenRouteProp } from '../../types/navigation.types';
+import { AccessLogListRouteProp } from '../../types/navigation.types';
 import { Log } from '../../types/data.types';
 
 import api from '../../api';
 
-const DoorDataScreen: FC = () => {
-  const { id, name } = useRoute<DoorDataScreenRouteProp>().params;
+const AccessLogListScreen: FC = () => {
+  const { id, name } = useRoute<AccessLogListRouteProp>().params;
 
   const [loading, setLoading] = useState(true);
   const [token, setToken] = useState<string | null>(null);
@@ -182,4 +182,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default DoorDataScreen;
+export default AccessLogListScreen;

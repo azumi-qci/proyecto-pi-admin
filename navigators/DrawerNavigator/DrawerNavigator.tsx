@@ -27,7 +27,7 @@ const DrawerNavigator: FC = () => {
         options={{ headerTitle: 'Administración de accesos', title: 'Inicio' }}
       />
       <Drawer.Screen
-        name="AccessManagement"
+        name="AccessManagementScreen"
         component={AccessManagementScreen}
         options={{
           headerTitle: 'Administrar acceso',

@@ -23,7 +23,7 @@ const MainStackNavigator: FC = () => {
         options={{ headerShown: false }}
       />
       <Stack.Screen
-        name="DoorDataScreen"
+        name="AccessLogListScreen"
         component={AccessLogListScreen}
         options={{
           title: 'Registros de puerta',

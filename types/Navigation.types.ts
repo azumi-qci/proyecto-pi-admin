@@ -5,7 +5,7 @@ import { DrawerNavigationProp } from '@react-navigation/drawer';
 export type RootStackParamList = {
   Login: undefined;
   DrawerNavigator: undefined;
-  DoorDataScreen: { id: number; name: string };
+  AccessLogListScreen: { id: number; name: string };
 };
 
 export type DrawerParamList = {
@@ -25,11 +25,11 @@ export type DrawerNavigatorNavigationProp = CompositeNavigationProp<
 >;
 
 export type AccessManagementScreenNavigationProp = CompositeNavigationProp<
-  NativeStackNavigationProp<RootStackParamList, 'DoorDataScreen'>,
+  NativeStackNavigationProp<RootStackParamList, 'AccessLogListScreen'>,
   DrawerNavigationProp<DrawerParamList>
 >;
 
-export type DoorDataScreenRouteProp = RouteProp<
+export type AccessLogListRouteProp = RouteProp<
   RootStackParamList,
-  'DoorDataScreen'
+  'AccessLogListScreen'
 >;
