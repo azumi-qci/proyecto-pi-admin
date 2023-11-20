@@ -35,7 +35,7 @@ const AccessManagementScreen: FC = () => {
   };
 
   const onPressDoor = (id: number, name: string) => {
-    navigation.push('DoorDataScreen', { id, name });
+    navigation.push('AccessLogListScreen', { id, name });
   };
 
   useEffect(() => {

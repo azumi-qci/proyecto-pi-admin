@@ -11,7 +11,7 @@ const HomeScreen: FC = () => {
   const navigation = useNavigation<DrawerNavigatorNavigationProp>();
 
   const onPressAccessManagement = () => {
-    navigation.jumpTo('AccessManagement');
+    navigation.jumpTo('AccessManagementScreen');
   };
 
   const onPressUserManagement = () => {

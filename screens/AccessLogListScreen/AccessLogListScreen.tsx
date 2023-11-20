@@ -1,4 +1,5 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import Icon from 'react-native-vector-icons/MaterialIcons';
 import { useRoute } from '@react-navigation/native';
 import { FC, useEffect, useState } from 'react';
 import { FlatList, StyleSheet, ToastAndroid, View } from 'react-native';
@@ -8,6 +9,7 @@ import {
   Text,
   TouchableRipple,
   Button,
+  useTheme,
 } from 'react-native-paper';
 
 import { AccessLogListRouteProp } from '../../types/navigation.types';
@@ -16,6 +18,8 @@ import { Log } from '../../types/data.types';
 import api from '../../api';
 
 const AccessLogListScreen: FC = () => {
+  const theme = useTheme();
+
   const { id, name } = useRoute<AccessLogListRouteProp>().params;
 
   const [loading, setLoading] = useState(true);
@@ -97,6 +101,10 @@ const AccessLogListScreen: FC = () => {
       .then(() => onCancelDeleteLog());
   };
 
+  const onPressNewAccessLog = () => {
+    console.log('Nuevo');
+  };
+
   useEffect(() => {
     const getSavedToken = async () => {
       const savedToken = await AsyncStorage.getItem('token');
@@ -139,6 +147,16 @@ const AccessLogListScreen: FC = () => {
         <Text style={styles.title} variant="titleLarge">
           {name}
         </Text>
+        <View style={styles.newButtonContainer}>
+          <Button
+            icon={() => (
+              <Icon name="add" size={20} color={theme.colors.surface} />
+            )}
+            mode="contained"
+            onPress={() => onPressNewAccessLog()}>
+            Nuevo
+          </Button>
+        </View>
         <FlatList
           data={logs}
           renderItem={({ item }) => (
@@ -179,6 +197,9 @@ const styles = StyleSheet.create({
   },
   itemTitle: {
     fontWeight: 'bold',
+  },
+  newButtonContainer: {
+    alignItems: 'flex-end',
   },
 });
 
