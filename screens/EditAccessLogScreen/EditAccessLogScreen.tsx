@@ -29,6 +29,8 @@ const EditAccessLogScreen: FC = ({}) => {
   const [showTimePicker, setShowTimePicker] = useState(false);
   const [showDoorPicker, setShowDoorPicker] = useState(false);
   const [selectedDoor, setSelectedDoor] = useState<number | null>(null);
+  const [selectedDate, setSelectedDate] = useState('');
+  const [selectedTime, setSelectedTime] = useState('');
 
   const [doors, setDoors] = useState<{ id: number; name: string }[]>([]);
 
@@ -65,10 +67,12 @@ const EditAccessLogScreen: FC = ({}) => {
       !data.car_brand ||
       !data.car_color ||
       !data.car_plate ||
-      !data.access_daytime ||
       data.id_door === -1 ||
       !data.visit_location
     ) {
+      setError('empty-fields');
+      return;
+    } else if (!data.access_daytime || (!selectedDate && !selectedTime)) {
       setError('empty-fields');
       return;
     }
@@ -101,6 +105,12 @@ const EditAccessLogScreen: FC = ({}) => {
     }
   };
 
+  const getCombinedDateAndTime = () => {
+    return new Date(
+      `${selectedDate || new Date().toDateString()} ${selectedTime}`,
+    );
+  };
+
   useEffect(() => {
     const getSavedToken = async () => {
       const savedToken = await AsyncStorage.getItem('token');
@@ -130,22 +140,24 @@ const EditAccessLogScreen: FC = ({}) => {
       <DatePicker
         cancelText="Cancelar"
         confirmText="Aceptar"
-        date={data.access_daytime}
+        date={selectedDate ? getCombinedDateAndTime() : data.access_daytime}
         locale="es-MX"
         modal={true}
         mode="date"
         onCancel={() => setShowDatePicker(false)}
+        onConfirm={date => setSelectedDate(date.toDateString())}
         open={showDatePicker}
         title="Seleccionar fecha de llegada"
       />
       <DatePicker
         cancelText="Cancelar"
         confirmText="Aceptar"
-        date={data.access_daytime}
+        date={selectedTime ? getCombinedDateAndTime() : data.access_daytime}
         locale="es-MX"
         modal={true}
         mode="time"
         onCancel={() => setShowTimePicker(false)}
+        onConfirm={date => setSelectedTime(date.toTimeString())}
         open={showTimePicker}
         title="Seleccionar hora de llegada"
       />
@@ -194,6 +206,9 @@ const EditAccessLogScreen: FC = ({}) => {
             label="Fecha de llegada"
             mode="outlined"
             style={styles.input}
+            value={
+              selectedDate ? getCombinedDateAndTime().toLocaleDateString() : ''
+            }
           />
         </Pressable>
         <Pressable disabled={loading} onPress={() => setShowTimePicker(true)}>
@@ -202,6 +217,9 @@ const EditAccessLogScreen: FC = ({}) => {
             label="Hora de llegada"
             mode="outlined"
             style={styles.input}
+            value={
+              selectedTime ? getCombinedDateAndTime().toLocaleTimeString() : ''
+            }
           />
         </Pressable>
         <Pressable disabled={loading} onPress={() => setShowDoorPicker(true)}>
@@ -230,6 +248,15 @@ const EditAccessLogScreen: FC = ({}) => {
           onChangeText={text => setData({ ...data, car_color: text })}
           style={styles.input}
           value={data.car_color}
+        />
+        <TextInput
+          disabled={loading}
+          inputMode="text"
+          label="Placa del automóvil"
+          mode="outlined"
+          onChangeText={text => setData({ ...data, car_plate: text })}
+          style={styles.input}
+          value={data.car_plate}
         />
         <TextInput
           disabled={loading}
