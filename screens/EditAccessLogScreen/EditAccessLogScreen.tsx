@@ -1,5 +1,6 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import DatePicker from 'react-native-date-picker';
+import Icon from 'react-native-vector-icons/MaterialIcons';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { FC, useEffect, useState } from 'react';
 import { Pressable, StyleSheet, ToastAndroid, View } from 'react-native';
@@ -15,15 +16,16 @@ import {
 } from 'react-native-paper';
 
 import { EditAccessLogScreenRouteProp } from '../../types/navigation.types';
+import { AccessLog } from '../../types/data.types';
 
 import api from '../../api';
-import Icon from 'react-native-vector-icons/MaterialIcons';
 
 const EditAccessLogScreen: FC = ({}) => {
   const { id, refreshData } = useRoute<EditAccessLogScreenRouteProp>().params;
   const navigation = useNavigation();
   const theme = useTheme();
 
+  const [fetchingData, setFetchingData] = useState(true);
   const [token, setToken] = useState<string | null>(null);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
@@ -42,7 +44,7 @@ const EditAccessLogScreen: FC = ({}) => {
     car_brand: '',
     car_color: '',
     car_plate: '',
-    access_daytime: new Date(),
+    access_daytime: new Date().toISOString(),
     id_door: -1,
     visit_location: '',
   });
@@ -65,7 +67,7 @@ const EditAccessLogScreen: FC = ({}) => {
     const newDate =
       selectedDate && selectedTime
         ? getCombinedDateAndTime()
-        : data.access_daytime;
+        : new Date(data.access_daytime);
 
     api
       .post(
@@ -184,7 +186,19 @@ const EditAccessLogScreen: FC = ({}) => {
 
   useEffect(() => {
     if (doors.length && id != undefined) {
-      // TODO: Fetch all access log data
+      api
+        .get<{ error: boolean; content: AccessLog }>(`/access/log/${id}`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        })
+        .then(response => {
+          setData({ ...response.data.content });
+        })
+        .catch(console.warn)
+        .finally(() => setFetchingData(false));
+    } else if (doors.length) {
+      setFetchingData(false);
     }
   }, [doors]);
 
@@ -194,12 +208,20 @@ const EditAccessLogScreen: FC = ({}) => {
     }
   }, [token]);
 
+  if (fetchingData) {
+    return null;
+  }
+
   return (
     <>
       <DatePicker
         cancelText="Cancelar"
         confirmText="Aceptar"
-        date={selectedDate ? getCombinedDateAndTime() : data.access_daytime}
+        date={
+          selectedDate
+            ? getCombinedDateAndTime()
+            : new Date(data.access_daytime)
+        }
         locale="es-MX"
         modal={true}
         mode="date"
@@ -214,7 +236,11 @@ const EditAccessLogScreen: FC = ({}) => {
       <DatePicker
         cancelText="Cancelar"
         confirmText="Aceptar"
-        date={selectedTime ? getCombinedDateAndTime() : data.access_daytime}
+        date={
+          selectedTime
+            ? getCombinedDateAndTime()
+            : new Date(data.access_daytime)
+        }
         locale="es-MX"
         modal={true}
         mode="time"
@@ -274,7 +300,9 @@ const EditAccessLogScreen: FC = ({}) => {
             mode="outlined"
             style={styles.input}
             value={
-              selectedDate ? getCombinedDateAndTime().toLocaleDateString() : ''
+              selectedDate
+                ? getCombinedDateAndTime().toLocaleDateString()
+                : new Date(data.access_daytime).toLocaleDateString()
             }
           />
         </Pressable>
@@ -286,7 +314,9 @@ const EditAccessLogScreen: FC = ({}) => {
             mode="outlined"
             style={styles.input}
             value={
-              selectedTime ? getCombinedDateAndTime().toLocaleTimeString() : ''
+              selectedTime
+                ? getCombinedDateAndTime().toLocaleTimeString()
+                : new Date(data.access_daytime).toLocaleTimeString()
             }
           />
         </Pressable>

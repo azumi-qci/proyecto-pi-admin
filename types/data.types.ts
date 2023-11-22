@@ -1,4 +1,4 @@
-export interface Log {
+export interface AccessLog {
   id: number;
   name: string;
   car_brand: string;

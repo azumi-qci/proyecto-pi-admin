@@ -16,7 +16,7 @@ import {
   AccessLogListRouteProp,
   AccessLogListScreenNavigationProp,
 } from '../../types/navigation.types';
-import { Log } from '../../types/data.types';
+import { AccessLog } from '../../types/data.types';
 
 import api from '../../api';
 
@@ -28,13 +28,13 @@ const AccessLogListScreen: FC = () => {
 
   const [loading, setLoading] = useState(true);
   const [token, setToken] = useState<string | null>(null);
-  const [logs, setLogs] = useState<Log[] | null>(null);
+  const [logs, setLogs] = useState<AccessLog[] | null>(null);
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
   const [logToDelete, setLogToDelete] = useState<number | null>(null);
 
   const getLogs = async () => {
     api
-      .get<{ error: boolean; content: Log[] }>(`/access/${id}`, {
+      .get<{ error: boolean; content: AccessLog[] }>(`/access/${id}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
