@@ -3,6 +3,7 @@ import DatePicker from 'react-native-date-picker';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { FC, useEffect, useState } from 'react';
 import { Pressable, StyleSheet, ToastAndroid, View } from 'react-native';
+import { AxiosError } from 'axios';
 import {
   Button,
   Dialog,
@@ -92,8 +93,15 @@ const EditAccessLogScreen: FC = ({}) => {
         );
         navigation.goBack();
       })
-      .catch(console.warn)
-      .finally(() => setLoading(false));
+      .catch(reason => {
+        const error = reason as AxiosError;
+
+        if (!error.response) {
+          ToastAndroid.show('Hubo un error de conexión', ToastAndroid.LONG);
+        } else {
+          ToastAndroid.show('Hubo un error en el servidor', ToastAndroid.LONG);
+        }
+      });
   };
 
   const updateAccessLog = () => {};
