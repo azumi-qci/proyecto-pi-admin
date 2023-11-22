@@ -1,7 +1,13 @@
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { FC, useCallback, useState } from 'react';
-import { View, StyleSheet } from 'react-native';
+import {
+  View,
+  StyleSheet,
+  ImageBackground,
+  Dimensions,
+  Image,
+} from 'react-native';
 import { Text, Card, TextInput, Button, useTheme } from 'react-native-paper';
 import { useNavigation } from '@react-navigation/native';
 import { AxiosError } from 'axios';
@@ -64,87 +70,96 @@ const LoginScreen: FC = () => {
 
   return (
     <View style={styles.container}>
-      <Card style={styles.card}>
-        <Card.Content>
-          <Text style={styles.title} variant="headlineSmall">
-            Iniciar sesión
-          </Text>
-          <TextInput
-            disabled={loading}
-            error={error === 'empty-email'}
-            label="Correo electrónico"
-            mode="outlined"
-            onChangeText={text => setData({ ...data, email: text })}
-            style={styles.field}
-            value={data.email}
-          />
-          <TextInput
-            disabled={loading}
-            error={error === 'empty-password'}
-            label="Contraseña"
-            mode="outlined"
-            onChangeText={text => setData({ ...data, password: text })}
-            secureTextEntry
-            style={styles.field}
-            value={data.password}
-          />
-          <Button
-            disabled={loading}
-            onPress={login}
-            mode="contained-tonal"
-            icon={
-              loading
-                ? () => (
-                    <Icon
-                      name="hourglass-empty"
-                      size={20}
-                      color={theme.colors.tertiary}
-                    />
-                  )
-                : undefined
-            }>
-            {loading ? 'Entrando...' : 'Entrar'}
-          </Button>
-          {error.includes('empty') ? (
-            <Text style={[styles.errorText, { color: theme.colors.error }]}>
-              Existen campos vacíos
+      <ImageBackground
+        style={styles.backgrondImage}
+        source={require('../../images/background.jpg')}
+        resizeMode="cover">
+        <Card style={styles.card}>
+          <Card.Content>
+            <Image
+              style={styles.logoImg}
+              source={require('../../images/cucei-logo.png')}
+            />
+            <Text style={styles.title} variant="headlineMedium">
+              Administración de acceso
             </Text>
-          ) : null}
-          {error.includes('server') ? (
-            <Text style={[styles.errorText, { color: theme.colors.error }]}>
-              Hubo un error en el servidor
-            </Text>
-          ) : null}
-          {error.includes('connection') ? (
-            <Text style={[styles.errorText, { color: theme.colors.error }]}>
-              Error de conexión con el servidor
-            </Text>
-          ) : null}
-          {error.includes('wrong') ? (
-            <Text style={[styles.errorText, { color: theme.colors.error }]}>
-              Las credenciales no son válidas
-            </Text>
-          ) : null}
-        </Card.Content>
-      </Card>
+            <TextInput
+              disabled={loading}
+              error={error === 'empty-email'}
+              label="Correo electrónico"
+              mode="outlined"
+              onChangeText={text => setData({ ...data, email: text })}
+              style={styles.field}
+              value={data.email}
+            />
+            <TextInput
+              disabled={loading}
+              error={error === 'empty-password'}
+              label="Contraseña"
+              mode="outlined"
+              onChangeText={text => setData({ ...data, password: text })}
+              secureTextEntry
+              style={styles.field}
+              value={data.password}
+            />
+            <Button
+              disabled={loading}
+              onPress={login}
+              mode="contained-tonal"
+              icon={
+                loading
+                  ? () => (
+                      <Icon
+                        name="hourglass-empty"
+                        size={20}
+                        color={theme.colors.tertiary}
+                      />
+                    )
+                  : undefined
+              }>
+              {loading ? 'Entrando...' : 'Entrar'}
+            </Button>
+            {error.includes('empty') ? (
+              <Text style={[styles.errorText, { color: theme.colors.error }]}>
+                Existen campos vacíos
+              </Text>
+            ) : null}
+            {error.includes('server') ? (
+              <Text style={[styles.errorText, { color: theme.colors.error }]}>
+                Hubo un error en el servidor
+              </Text>
+            ) : null}
+            {error.includes('connection') ? (
+              <Text style={[styles.errorText, { color: theme.colors.error }]}>
+                Error de conexión con el servidor
+              </Text>
+            ) : null}
+            {error.includes('wrong') ? (
+              <Text style={[styles.errorText, { color: theme.colors.error }]}>
+                Las credenciales no son válidas
+              </Text>
+            ) : null}
+          </Card.Content>
+        </Card>
+      </ImageBackground>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    alignContent: 'center',
-    flexGrow: 1,
+    flex: 1,
+  },
+  backgrondImage: {
+    flex: 1,
     justifyContent: 'center',
-    width: '100%',
   },
   card: {
     marginHorizontal: 24,
   },
   title: {
     textAlign: 'center',
-    fontWeight: 'bold',
-    marginBottom: 14,
+    marginBottom: 16,
   },
   field: {
     marginBottom: 12,
@@ -152,6 +167,12 @@ const styles = StyleSheet.create({
   errorText: {
     marginTop: 10,
     textAlign: 'right',
+  },
+  logoImg: {
+    height: 150,
+    resizeMode: 'contain',
+    width: '100%',
+    marginBottom: 30,
   },
 });
 
