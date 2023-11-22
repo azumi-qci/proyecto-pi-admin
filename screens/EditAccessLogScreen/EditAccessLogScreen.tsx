@@ -28,6 +28,8 @@ const EditAccessLogScreen: FC = ({}) => {
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [showTimePicker, setShowTimePicker] = useState(false);
   const [showDoorPicker, setShowDoorPicker] = useState(false);
+  const [selectedDoor, setSelectedDoor] = useState<number | null>(null);
+
   const [doors, setDoors] = useState<{ id: number; name: string }[]>([]);
 
   const [data, setData] = useState({
@@ -41,8 +43,6 @@ const EditAccessLogScreen: FC = ({}) => {
     visit_location: '',
   });
 
-  const onPressSave = () => {};
-
   const getAvailableDoors = () => {
     api
       .get<{ error: boolean; content: { id: number; name: string }[] }>(
@@ -55,6 +55,13 @@ const EditAccessLogScreen: FC = ({}) => {
       )
       .then(response => setDoors(response.data.content))
       .catch();
+  };
+
+  const onPressSave = () => {};
+
+  const onPressCancelSelectDoor = () => {
+    setSelectedDoor(null);
+    setShowDoorPicker(false);
   };
 
   useEffect(() => {
@@ -106,15 +113,19 @@ const EditAccessLogScreen: FC = ({}) => {
         title="Seleccionar hora de llegada"
       />
       <Portal>
-        <Dialog
-          visible={showDoorPicker}
-          onDismiss={() => setShowDoorPicker(false)}>
+        <Dialog visible={showDoorPicker} onDismiss={onPressCancelSelectDoor}>
           <Dialog.Title>Seleccionar acceso</Dialog.Title>
           <Dialog.Content>
             {doors.length ? (
               doors.map(item => (
-                <Pressable style={styles.radioButtonContainer}>
-                  <RadioButton key={item.id} value={item.id.toString()} />
+                <Pressable
+                  onPress={() => setSelectedDoor(item.id)}
+                  style={styles.radioButtonContainer}>
+                  <RadioButton
+                    key={item.id}
+                    status={selectedDoor === item.id ? 'checked' : 'unchecked'}
+                    value={item.id.toString()}
+                  />
                   <Text style={styles.radioButtonText}>{item.name}</Text>
                 </Pressable>
               ))
@@ -123,7 +134,7 @@ const EditAccessLogScreen: FC = ({}) => {
             )}
           </Dialog.Content>
           <Dialog.Actions>
-            <Button onPress={() => setShowDoorPicker(false)}>Cancelar</Button>
+            <Button onPress={onPressCancelSelectDoor}>Cancelar</Button>
             <Button onPress={() => setShowDoorPicker(false)}>Aceptar</Button>
           </Dialog.Actions>
         </Dialog>
