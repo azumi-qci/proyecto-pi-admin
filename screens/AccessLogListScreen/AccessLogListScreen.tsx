@@ -62,7 +62,10 @@ const AccessLogListScreen: FC = () => {
   };
 
   const onPressNewAccessLog = () => {
-    navigation.push('EditAccessLogScreen', { id: undefined });
+    navigation.push('EditAccessLogScreen', {
+      id: undefined,
+      refreshData: () => getLogs(),
+    });
   };
 
   const onLongPressLog = (id: number) => {
@@ -204,6 +207,7 @@ const styles = StyleSheet.create({
   },
   newButtonContainer: {
     alignItems: 'flex-end',
+    marginBottom: 6,
   },
 });
 
