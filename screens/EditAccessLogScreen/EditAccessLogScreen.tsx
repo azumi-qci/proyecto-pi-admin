@@ -64,10 +64,7 @@ const EditAccessLogScreen: FC = ({}) => {
   };
 
   const addNewAccessLog = () => {
-    const newDate =
-      selectedDate && selectedTime
-        ? getCombinedDateAndTime()
-        : new Date(data.access_daytime);
+    const newDate = getCombinedDateAndTime();
 
     api
       .post(
@@ -77,10 +74,8 @@ const EditAccessLogScreen: FC = ({}) => {
           car_brand: data.car_brand.trim(),
           car_color: data.car_color.trim(),
           car_plate: data.car_plate.trim(),
-          access_daytime: `${newDate.getFullYear()}-${newDate.getMonth()}-${newDate.getDate()} ${
-            newDate.toTimeString().split(' ')[0]
-          }`,
-          visit_location: data.visit_location,
+          access_daytime: getFormattedDateToSend(newDate),
+          visit_location: data.visit_location.trim(),
         },
         {
           headers: {
@@ -109,7 +104,47 @@ const EditAccessLogScreen: FC = ({}) => {
       });
   };
 
-  const updateAccessLog = () => {};
+  const updateAccessLog = () => {
+    const newDate = getCombinedDateAndTime();
+
+    api
+      .put(
+        `/access/${data.id}`,
+        {
+          name: data.name.trim(),
+          car_brand: data.car_brand.trim(),
+          car_color: data.car_color.trim(),
+          car_plate: data.car_plate.trim(),
+          access_daytime: getFormattedDateToSend(newDate),
+          id_door: data.id_door,
+          visit_location: data.visit_location.trim(),
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        },
+      )
+      .then(() => {
+        ToastAndroid.show(
+          'El registro se actualizó exitosamente',
+          ToastAndroid.LONG,
+        );
+
+        refreshData();
+
+        navigation.goBack();
+      })
+      .catch(reason => {
+        const error = reason as AxiosError;
+
+        if (!error.response) {
+          ToastAndroid.show('Hubo un error de conexión', ToastAndroid.LONG);
+        } else {
+          ToastAndroid.show('Hubo un error en el servidor', ToastAndroid.LONG);
+        }
+      });
+  };
 
   const onPressSave = () => {
     setError('');
@@ -150,6 +185,12 @@ const EditAccessLogScreen: FC = ({}) => {
       setSelectedDoor(null);
       setShowDoorPicker(false);
     }
+  };
+
+  const getFormattedDateToSend = (date: Date) => {
+    return `${date.getFullYear()}-${date.getMonth()}-${date.getDate()} ${
+      date.toTimeString().split(' ')[0]
+    }`;
   };
 
   const getSelectedDoorName = (): string => {
@@ -194,6 +235,13 @@ const EditAccessLogScreen: FC = ({}) => {
         })
         .then(response => {
           setData({ ...response.data.content });
+          // Update setted date
+          setSelectedDate(
+            new Date(response.data.content.access_daytime).toDateString(),
+          );
+          setSelectedTime(
+            new Date(response.data.content.access_daytime).toTimeString(),
+          );
         })
         .catch(console.warn)
         .finally(() => setFetchingData(false));
