@@ -20,7 +20,7 @@ import api from '../../api';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 
 const EditAccessLogScreen: FC = ({}) => {
-  const { id } = useRoute<EditAccessLogScreenRouteProp>().params;
+  const { id, refreshData } = useRoute<EditAccessLogScreenRouteProp>().params;
   const navigation = useNavigation();
   const theme = useTheme();
 
@@ -91,6 +91,9 @@ const EditAccessLogScreen: FC = ({}) => {
           'El registro se agregó exitosamente',
           ToastAndroid.LONG,
         );
+
+        refreshData();
+
         navigation.goBack();
       })
       .catch(reason => {

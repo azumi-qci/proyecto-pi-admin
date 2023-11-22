@@ -6,7 +6,7 @@ export type RootStackParamList = {
   Login: undefined;
   DrawerNavigator: undefined;
   AccessLogListScreen: { id: number; name: string };
-  EditAccessLogScreen: { id?: number; refreshData?(): void };
+  EditAccessLogScreen: { id?: number; refreshData(): void };
 };
 
 export type DrawerParamList = {

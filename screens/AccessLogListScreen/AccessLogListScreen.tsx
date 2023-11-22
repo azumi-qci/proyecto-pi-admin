@@ -58,7 +58,10 @@ const AccessLogListScreen: FC = () => {
   };
 
   const onPressLog = (id: number) => {
-    navigation.push('EditAccessLogScreen', { id });
+    navigation.push('EditAccessLogScreen', {
+      id,
+      refreshData: () => getLogs(),
+    });
   };
 
   const onPressNewAccessLog = () => {
