@@ -1,6 +1,6 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Icon from 'react-native-vector-icons/MaterialIcons';
-import { useRoute } from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native';
 import { FC, useEffect, useState } from 'react';
 import { FlatList, StyleSheet, ToastAndroid, View } from 'react-native';
 import {
@@ -12,13 +12,17 @@ import {
   useTheme,
 } from 'react-native-paper';
 
-import { AccessLogListRouteProp } from '../../types/navigation.types';
+import {
+  AccessLogListRouteProp,
+  AccessLogListScreenNavigationProp,
+} from '../../types/navigation.types';
 import { Log } from '../../types/data.types';
 
 import api from '../../api';
 
 const AccessLogListScreen: FC = () => {
   const theme = useTheme();
+  const navigation = useNavigation<AccessLogListScreenNavigationProp>();
 
   const { id, name } = useRoute<AccessLogListRouteProp>().params;
 
@@ -54,7 +58,11 @@ const AccessLogListScreen: FC = () => {
   };
 
   const onPressLog = (id: number) => {
-    console.log(id);
+    navigation.push('EditAccessLogScreen', { id });
+  };
+
+  const onPressNewAccessLog = () => {
+    navigation.push('EditAccessLogScreen', { id: undefined });
   };
 
   const onLongPressLog = (id: number) => {
@@ -99,10 +107,6 @@ const AccessLogListScreen: FC = () => {
         );
       })
       .then(() => onCancelDeleteLog());
-  };
-
-  const onPressNewAccessLog = () => {
-    console.log('Nuevo');
   };
 
   useEffect(() => {

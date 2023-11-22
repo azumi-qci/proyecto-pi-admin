@@ -6,6 +6,7 @@ export type RootStackParamList = {
   Login: undefined;
   DrawerNavigator: undefined;
   AccessLogListScreen: { id: number; name: string };
+  EditAccessLogScreen: { id?: number };
 };
 
 export type DrawerParamList = {
@@ -29,7 +30,17 @@ export type AccessManagementScreenNavigationProp = CompositeNavigationProp<
   DrawerNavigationProp<DrawerParamList>
 >;
 
+export type AccessLogListScreenNavigationProp = NativeStackNavigationProp<
+  RootStackParamList,
+  'AccessLogListScreen'
+>;
+
 export type AccessLogListRouteProp = RouteProp<
   RootStackParamList,
   'AccessLogListScreen'
+>;
+
+export type EditAccessLogScreenRouteProp = RouteProp<
+  RootStackParamList,
+  'EditAccessLogScreen'
 >;

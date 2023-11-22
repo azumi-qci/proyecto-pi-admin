@@ -4,6 +4,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { DrawerNavigator } from '../DrawerNavigator';
 import { LoginScreen } from '../../screens/LoginScreen';
 import { AccessLogListScreen } from '../../screens/AccessLogListScreen';
+import { EditAccessLogScreen } from '../../screens/EditAccessLogScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -28,6 +29,13 @@ const MainStackNavigator: FC = () => {
         options={{
           title: 'Registros de puerta',
         }}
+      />
+      <Stack.Screen
+        name="EditAccessLogScreen"
+        component={EditAccessLogScreen}
+        options={({ route }) => ({
+          title: route.params?.id ? 'Editar registro' : 'Nuevo registro',
+        })}
       />
     </Stack.Navigator>
   );
