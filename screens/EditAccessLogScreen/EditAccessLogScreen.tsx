@@ -33,13 +33,13 @@ const EditAccessLogScreen: FC = ({}) => {
   const [doors, setDoors] = useState<{ id: number; name: string }[]>([]);
 
   const [data, setData] = useState({
-    id: undefined,
+    id: -1,
     name: '',
     car_brand: '',
     car_color: '',
     car_plate: '',
     access_daytime: new Date(),
-    id_door: undefined,
+    id_door: -1,
     visit_location: '',
   });
 
@@ -57,11 +57,48 @@ const EditAccessLogScreen: FC = ({}) => {
       .catch();
   };
 
-  const onPressSave = () => {};
+  const onPressSave = () => {
+    setError('');
+
+    if (
+      !data.name ||
+      !data.car_brand ||
+      !data.car_color ||
+      !data.car_plate ||
+      !data.access_daytime ||
+      data.id_door === -1 ||
+      !data.visit_location
+    ) {
+      setError('empty-fields');
+      return;
+    }
+  };
 
   const onPressCancelSelectDoor = () => {
     setSelectedDoor(null);
     setShowDoorPicker(false);
+  };
+
+  const onPressAcceptSelectDoor = () => {
+    if (selectedDoor) {
+      setData({ ...data, id_door: selectedDoor });
+      setSelectedDoor(null);
+      setShowDoorPicker(false);
+    }
+  };
+
+  const getSelectedDoorName = (): string => {
+    if (data.id_door < 0) {
+      return '';
+    } else {
+      const doorIndex = doors.findIndex(item => item.id === data.id_door);
+
+      if (doorIndex > -1) {
+        return doors[doorIndex].name;
+      }
+
+      return '';
+    }
   };
 
   useEffect(() => {
@@ -135,7 +172,9 @@ const EditAccessLogScreen: FC = ({}) => {
           </Dialog.Content>
           <Dialog.Actions>
             <Button onPress={onPressCancelSelectDoor}>Cancelar</Button>
-            <Button onPress={() => setShowDoorPicker(false)}>Aceptar</Button>
+            <Button disabled={!selectedDoor} onPress={onPressAcceptSelectDoor}>
+              Aceptar
+            </Button>
           </Dialog.Actions>
         </Dialog>
       </Portal>
@@ -145,7 +184,9 @@ const EditAccessLogScreen: FC = ({}) => {
           inputMode="text"
           label="Nombre"
           mode="outlined"
+          onChangeText={text => setData({ ...data, name: text })}
           style={styles.input}
+          value={data.name}
         />
         <Pressable disabled={loading} onPress={() => setShowDatePicker(true)}>
           <TextInput
@@ -169,6 +210,7 @@ const EditAccessLogScreen: FC = ({}) => {
             label="Acceso"
             mode="outlined"
             style={styles.input}
+            value={getSelectedDoorName()}
           />
         </Pressable>
         <TextInput
@@ -176,28 +218,34 @@ const EditAccessLogScreen: FC = ({}) => {
           inputMode="text"
           label="Marca del automóvil"
           mode="outlined"
+          onChangeText={text => setData({ ...data, car_brand: text })}
           style={styles.input}
+          value={data.car_brand}
         />
         <TextInput
           disabled={loading}
           inputMode="text"
           label="Color del automóvil"
           mode="outlined"
+          onChangeText={text => setData({ ...data, car_color: text })}
           style={styles.input}
+          value={data.car_color}
         />
         <TextInput
           disabled={loading}
           inputMode="text"
           label="Lugar de visita"
           mode="outlined"
+          onChangeText={text => setData({ ...data, visit_location: text })}
           style={styles.input}
+          value={data.visit_location}
         />
         <Button disabled={loading} mode="contained-tonal" onPress={onPressSave}>
           Guardar
         </Button>
         {error.includes('empty') ? (
           <Text style={[styles.errorText, { color: theme.colors.error }]}>
-            Existen campos vacíos
+            Por favor llene todos los campos
           </Text>
         ) : null}
       </View>
