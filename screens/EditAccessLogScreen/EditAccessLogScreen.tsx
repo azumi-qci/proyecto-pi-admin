@@ -1,8 +1,8 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import DatePicker from 'react-native-date-picker';
-import { useRoute } from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native';
 import { FC, useEffect, useState } from 'react';
-import { Pressable, StyleSheet, View } from 'react-native';
+import { Pressable, StyleSheet, ToastAndroid, View } from 'react-native';
 import {
   Button,
   Dialog,
@@ -16,10 +16,11 @@ import {
 import { EditAccessLogScreenRouteProp } from '../../types/navigation.types';
 
 import api from '../../api';
+import Icon from 'react-native-vector-icons/MaterialIcons';
 
 const EditAccessLogScreen: FC = ({}) => {
   const { id } = useRoute<EditAccessLogScreenRouteProp>().params;
-
+  const navigation = useNavigation();
   const theme = useTheme();
 
   const [token, setToken] = useState<string | null>(null);
@@ -59,6 +60,44 @@ const EditAccessLogScreen: FC = ({}) => {
       .catch();
   };
 
+  const addNewAccessLog = () => {
+    const newDate =
+      selectedDate && selectedTime
+        ? getCombinedDateAndTime()
+        : data.access_daytime;
+
+    api
+      .post(
+        `/access/${data.id_door}`,
+        {
+          name: data.name.trim(),
+          car_brand: data.car_brand.trim(),
+          car_color: data.car_color.trim(),
+          car_plate: data.car_plate.trim(),
+          access_daytime: `${newDate.getFullYear()}-${newDate.getMonth()}-${newDate.getDate()} ${
+            newDate.toTimeString().split(' ')[0]
+          }`,
+          visit_location: data.visit_location,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        },
+      )
+      .then(() => {
+        ToastAndroid.show(
+          'El registro se agregó exitosamente',
+          ToastAndroid.LONG,
+        );
+        navigation.goBack();
+      })
+      .catch(console.warn)
+      .finally(() => setLoading(false));
+  };
+
+  const updateAccessLog = () => {};
+
   const onPressSave = () => {
     setError('');
 
@@ -76,6 +115,15 @@ const EditAccessLogScreen: FC = ({}) => {
       setError('empty-fields');
       return;
     }
+
+    setLoading(true);
+
+    if (data.id > -1) {
+      updateAccessLog();
+      return;
+    }
+
+    addNewAccessLog();
   };
 
   const onPressCancelSelectDoor = () => {
@@ -145,7 +193,10 @@ const EditAccessLogScreen: FC = ({}) => {
         modal={true}
         mode="date"
         onCancel={() => setShowDatePicker(false)}
-        onConfirm={date => setSelectedDate(date.toDateString())}
+        onConfirm={date => {
+          setSelectedDate(date.toDateString());
+          setShowDatePicker(false);
+        }}
         open={showDatePicker}
         title="Seleccionar fecha de llegada"
       />
@@ -157,7 +208,10 @@ const EditAccessLogScreen: FC = ({}) => {
         modal={true}
         mode="time"
         onCancel={() => setShowTimePicker(false)}
-        onConfirm={date => setSelectedTime(date.toTimeString())}
+        onConfirm={date => {
+          setSelectedTime(date.toTimeString());
+          setShowTimePicker(false);
+        }}
         open={showTimePicker}
         title="Seleccionar hora de llegada"
       />
@@ -168,6 +222,7 @@ const EditAccessLogScreen: FC = ({}) => {
             {doors.length ? (
               doors.map(item => (
                 <Pressable
+                  key={item.id}
                   onPress={() => setSelectedDoor(item.id)}
                   style={styles.radioButtonContainer}>
                   <RadioButton
@@ -202,6 +257,7 @@ const EditAccessLogScreen: FC = ({}) => {
         />
         <Pressable disabled={loading} onPress={() => setShowDatePicker(true)}>
           <TextInput
+            disabled={loading}
             editable={false}
             label="Fecha de llegada"
             mode="outlined"
@@ -213,6 +269,7 @@ const EditAccessLogScreen: FC = ({}) => {
         </Pressable>
         <Pressable disabled={loading} onPress={() => setShowTimePicker(true)}>
           <TextInput
+            disabled={loading}
             editable={false}
             label="Hora de llegada"
             mode="outlined"
@@ -224,6 +281,7 @@ const EditAccessLogScreen: FC = ({}) => {
         </Pressable>
         <Pressable disabled={loading} onPress={() => setShowDoorPicker(true)}>
           <TextInput
+            disabled={loading}
             editable={false}
             label="Acceso"
             mode="outlined"
@@ -267,8 +325,22 @@ const EditAccessLogScreen: FC = ({}) => {
           style={styles.input}
           value={data.visit_location}
         />
-        <Button disabled={loading} mode="contained-tonal" onPress={onPressSave}>
-          Guardar
+        <Button
+          disabled={loading}
+          mode="contained-tonal"
+          onPress={onPressSave}
+          icon={
+            loading
+              ? () => (
+                  <Icon
+                    name="hourglass-empty"
+                    size={20}
+                    color={theme.colors.tertiary}
+                  />
+                )
+              : undefined
+          }>
+          {loading ? 'Guardando...' : 'Guardar'}
         </Button>
         {error.includes('empty') ? (
           <Text style={[styles.errorText, { color: theme.colors.error }]}>
