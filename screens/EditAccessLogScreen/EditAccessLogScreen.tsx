@@ -84,17 +84,23 @@ const EditAccessLogScreen: FC = ({}) => {
   return (
     <>
       <DatePicker
-        mode="date"
+        cancelText="Cancelar"
+        confirmText="Aceptar"
         date={data.access_daytime}
+        locale="es-MX"
         modal={true}
+        mode="date"
         onCancel={() => setShowDatePicker(false)}
         open={showDatePicker}
         title="Seleccionar fecha de llegada"
       />
       <DatePicker
-        mode="time"
+        cancelText="Cancelar"
+        confirmText="Aceptar"
         date={data.access_daytime}
+        locale="es-MX"
         modal={true}
+        mode="time"
         onCancel={() => setShowTimePicker(false)}
         open={showTimePicker}
         title="Seleccionar hora de llegada"
