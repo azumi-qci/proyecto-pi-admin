@@ -3,7 +3,13 @@ import DatePicker from 'react-native-date-picker';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { FC, useEffect, useState } from 'react';
-import { Pressable, StyleSheet, ToastAndroid, View } from 'react-native';
+import {
+  Pressable,
+  StyleSheet,
+  ToastAndroid,
+  ScrollView,
+  View,
+} from 'react-native';
 import { AxiosError } from 'axios';
 import {
   Button,
@@ -330,7 +336,9 @@ const EditAccessLogScreen: FC = ({}) => {
           </Dialog.Actions>
         </Dialog>
       </Portal>
-      <View style={styles.container}>
+      <ScrollView
+        automaticallyAdjustKeyboardInsets={true}
+        style={styles.container}>
         <TextInput
           disabled={loading}
           inputMode="text"
@@ -436,7 +444,7 @@ const EditAccessLogScreen: FC = ({}) => {
             Por favor llene todos los campos
           </Text>
         ) : null}
-      </View>
+      </ScrollView>
     </>
   );
 };
