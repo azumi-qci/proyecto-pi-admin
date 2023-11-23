@@ -1,6 +1,7 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import DatePicker from 'react-native-date-picker';
 import Icon from 'react-native-vector-icons/MaterialIcons';
+import dayjs from 'dayjs';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { FC, useEffect, useState } from 'react';
 import {
@@ -39,8 +40,10 @@ const EditAccessLogScreen: FC = ({}) => {
   const [showTimePicker, setShowTimePicker] = useState(false);
   const [showDoorPicker, setShowDoorPicker] = useState(false);
   const [selectedDoor, setSelectedDoor] = useState<number | null>(null);
-  const [selectedDate, setSelectedDate] = useState('');
-  const [selectedTime, setSelectedTime] = useState('');
+  const [selectedDate, setSelectedDate] = useState(
+    dayjs().format('YYYY-MM-DD'),
+  );
+  const [selectedTime, setSelectedTime] = useState(dayjs().format('HH:mm'));
 
   const [doors, setDoors] = useState<{ id: number; name: string }[]>([]);
 
@@ -194,9 +197,7 @@ const EditAccessLogScreen: FC = ({}) => {
   };
 
   const getFormattedDateToSend = (date: Date) => {
-    return `${date.getFullYear()}-${date.getMonth()}-${date.getDate()} ${
-      date.toTimeString().split(' ')[0]
-    }`;
+    return dayjs(date).format('YYYY-MM-DD HH:mm:ss');
   };
 
   const getSelectedDoorName = (): string => {
@@ -214,9 +215,7 @@ const EditAccessLogScreen: FC = ({}) => {
   };
 
   const getCombinedDateAndTime = () => {
-    return new Date(
-      `${selectedDate || new Date().toDateString()} ${selectedTime}`,
-    );
+    return dayjs(`${selectedDate} ${selectedTime}`).toDate();
   };
 
   useEffect(() => {
@@ -243,10 +242,10 @@ const EditAccessLogScreen: FC = ({}) => {
           setData({ ...response.data.content });
           // Update setted date
           setSelectedDate(
-            new Date(response.data.content.access_daytime).toDateString(),
+            dayjs(response.data.content.access_daytime).format('YYYY-MM-DD'),
           );
           setSelectedTime(
-            new Date(response.data.content.access_daytime).toTimeString(),
+            dayjs(response.data.content.access_daytime).format('HH:mm'),
           );
         })
         .catch(console.warn)
@@ -271,17 +270,13 @@ const EditAccessLogScreen: FC = ({}) => {
       <DatePicker
         cancelText="Cancelar"
         confirmText="Aceptar"
-        date={
-          selectedDate
-            ? getCombinedDateAndTime()
-            : new Date(data.access_daytime)
-        }
+        date={getCombinedDateAndTime()}
         locale="es-MX"
         modal={true}
         mode="date"
         onCancel={() => setShowDatePicker(false)}
         onConfirm={date => {
-          setSelectedDate(date.toDateString());
+          setSelectedDate(dayjs(date).format('YYYY/MM/DD'));
           setShowDatePicker(false);
         }}
         open={showDatePicker}
@@ -290,17 +285,13 @@ const EditAccessLogScreen: FC = ({}) => {
       <DatePicker
         cancelText="Cancelar"
         confirmText="Aceptar"
-        date={
-          selectedTime
-            ? getCombinedDateAndTime()
-            : new Date(data.access_daytime)
-        }
+        date={getCombinedDateAndTime()}
         locale="es-MX"
         modal={true}
         mode="time"
         onCancel={() => setShowTimePicker(false)}
         onConfirm={date => {
-          setSelectedTime(date.toTimeString());
+          setSelectedTime(dayjs(date).format('HH:mm'));
           setShowTimePicker(false);
         }}
         open={showTimePicker}
@@ -355,11 +346,9 @@ const EditAccessLogScreen: FC = ({}) => {
             label="Fecha de llegada"
             mode="outlined"
             style={styles.input}
-            value={
-              selectedDate
-                ? getCombinedDateAndTime().toLocaleDateString()
-                : new Date(data.access_daytime).toLocaleDateString()
-            }
+            value={dayjs(
+              selectedDate ? getCombinedDateAndTime() : undefined,
+            ).format('DD/MM/YYYY')}
           />
         </Pressable>
         <Pressable disabled={loading} onPress={() => setShowTimePicker(true)}>
@@ -369,11 +358,9 @@ const EditAccessLogScreen: FC = ({}) => {
             label="Hora de llegada"
             mode="outlined"
             style={styles.input}
-            value={
-              selectedTime
-                ? getCombinedDateAndTime().toLocaleTimeString()
-                : new Date(data.access_daytime).toLocaleTimeString()
-            }
+            value={dayjs(
+              selectedTime ? getCombinedDateAndTime() : undefined,
+            ).format('hh:mm A')}
           />
         </Pressable>
         <Pressable disabled={loading} onPress={() => setShowDoorPicker(true)}>
