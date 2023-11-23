@@ -47,6 +47,7 @@ const EditAccessLogScreen: FC = ({}) => {
 
   const [doors, setDoors] = useState<{ id: number; name: string }[]>([]);
 
+  const [previousDoor, setPreviousDoor] = useState<number | null>(null);
   const [data, setData] = useState({
     id: -1,
     name: '',
@@ -127,6 +128,7 @@ const EditAccessLogScreen: FC = ({}) => {
           access_daytime: getFormattedDateToSend(newDate),
           id_door: data.id_door,
           visit_location: data.visit_location.trim(),
+          previous_id_door: previousDoor,
         },
         {
           headers: {
@@ -190,6 +192,11 @@ const EditAccessLogScreen: FC = ({}) => {
 
   const onPressAcceptSelectDoor = () => {
     if (selectedDoor) {
+      // The door changed
+      if (selectedDoor !== data.id_door) {
+        setPreviousDoor(data.id_door);
+      }
+
       setData({ ...data, id_door: selectedDoor });
       setSelectedDoor(null);
       setShowDoorPicker(false);
