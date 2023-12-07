@@ -1,4 +1,4 @@
 {
-  "API_URL": "https://acceso-cucei-972a921dbd02.herokuapp.com/api",
+  "API_URL": "http://192.168.3.2:8080/api",
   "API_TIMEOUT": 10000
 }
